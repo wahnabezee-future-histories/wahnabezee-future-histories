@@ -34,6 +34,14 @@ canvas {
 	text-align: center;
 	z-index: 1; /* TODO Solve this in HTML */
 }
+#plussign{
+	position:fixed;
+	color: #FF0A8D;
+	bottom: 50px;
+	font-size:80px;
+	text-align:right;
+	width:100%;
+}
 
 .dg.ac {
 	z-index: 2 !important; /* TODO Solve this in HTML */

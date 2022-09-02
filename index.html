@@ -69,31 +69,31 @@ const api = {
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 
-function onPointerDown( event ) {
+// function onPointerDown( event ) {
 
-// calculate pointer position in normalized device coordinates
-// (-1 to +1) for both components
-
-
-    pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
-
-				raycaster.setFromCamera( pointer, camera );
-				const intersects = raycaster.intersectObjects( objects, false );
-                if ( intersects.length > 0 ) {
-                    const intersect = intersects[ 0 ];
-                    for (let a = 0; a<objects.length; a++){
-                        if (objects[a]===intersect.object) {
-                            bubblegroup.add(annotations[a])
-                        } 
-                        else{
-                            bubblegroup.remove(annotations[a])
-                        }
-                    }
-    }
+// // calculate pointer position in normalized device coordinates
+// // (-1 to +1) for both components
 
 
-};
-window.addEventListener( 'pointerdown', onPointerDown );
+//     pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+
+// 				raycaster.setFromCamera( pointer, camera );
+// 				const intersects = raycaster.intersectObjects( objects, false );
+//                 if ( intersects.length > 0 ) {
+//                     const intersect = intersects[ 0 ];
+//                     for (let a = 0; a<objects.length; a++){
+//                         if (objects[a]===intersect.object) {
+//                             bubblegroup.add(annotations[a])
+//                         } 
+//                         else{
+//                             bubblegroup.remove(annotations[a])
+//                         }
+//                     }
+//     }
+
+
+// };
+// window.addEventListener( 'pointerdown', onPointerDown );
 			
 
 
@@ -124,7 +124,7 @@ animate();
   const boat = new THREE.Mesh(cloudgeo, boatmaterial)
 
 	
-        const map = new THREE.Mesh(mapgeo,mapmaterial);
+//         const map = new THREE.Mesh(mapgeo,mapmaterial);
         // map.rotation.y= 0.5*Math.PI;
         const map2 = new THREE.Mesh(mapgeo,map2material);
         // map.position.=0;

@@ -115,27 +115,39 @@ animate();
         const map2material = new THREE.MeshBasicMaterial({map: loader.load("basemap.png"), transparent:true})
         const cloudmaterial = new THREE.MeshBasicMaterial({map: loader.load("cloud-01.png"), transparent:true});
         const boatmaterial = new THREE.MeshBasicMaterial({map: loader.load("cloud-02.png"), transparent:true});
-// 	mapmaterial.alphaTest = 0.5;
+        const eaglematerial = new THREE.MeshBasicMaterial({map: loader.load("cloud-03.png"), transparent:true});
+
         map2material.alphaTest = 0.5;
 	cloudmaterial.alphaTest = 0.5;
 			
-	const cloudgeo = new THREE.PlaneGeometry(15,7);
-	const cloud = new THREE.Mesh(cloudgeo, cloudmaterial)
-  const boat = new THREE.Mesh(cloudgeo, boatmaterial)
+	const boatgeo = new THREE.PlaneGeometry(15,7);
+  const cloudgeo = new THREE.PlaneGeometry(4.8,3.3);
+  const eaglegeo = new THREE.PlaneGeometry(3.2,4);
+  
+	const cloud = new THREE.Mesh(cloudgeo, cloudmaterial);
+  const boat = new THREE.Mesh(boatgeo, boatmaterial);
+  const eagle = new THREE.Mesh(eaglegeo, eaglematerial);
 
 	
-//         const map = new THREE.Mesh(mapgeo,mapmaterial);
         // map.rotation.y= 0.5*Math.PI;
         const map2 = new THREE.Mesh(mapgeo,map2material);
         // map.position.=0;
         // map2.position.z=1;
 			
 	cloud.position.z = 5;
-	cloud.position.x = -2;
+	cloud.position.x = -6.3;
+  cloud.position.y = 0;
   boat.position.z = -2;
 	boat.position.x = -4;
   boat.position.y = 6;
 
+  eagle.position.z = 5;
+	eagle.position.x = 2;
+  eagle.position.y = 0;
+	
+        
+        drawinggroup.add(map2, cloud, boat,eagle);
+			
 			
 var particles = 40777;
         let positions = [];

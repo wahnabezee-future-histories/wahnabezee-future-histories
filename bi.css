@@ -33,6 +33,8 @@ canvas {
 	box-sizing: border-box;
 	text-align: center;
 	z-index: 1; /* TODO Solve this in HTML */
+		pointer-events:auto;
+
 }
 #plussign{
 	position:fixed;
@@ -41,12 +43,13 @@ canvas {
 	font-size:80px;
 	text-align:right;
 	width:100%;
+	pointer-events:auto;
 }
 
-.dg.ac {
+/* .dg.ac {
 	z-index: 2 !important; /* TODO Solve this in HTML */
 }
-
+ */
 #container {
 	position: absolute;
 	top: 0px;

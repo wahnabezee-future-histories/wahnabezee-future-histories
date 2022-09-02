@@ -30,13 +30,11 @@
 import * as THREE from 'https://unpkg.com/three@0.142.0/build/three.module.js';
 
 import Stats from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/libs/stats.module.js';
-import { GUI } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/libs/dat.gui.module.js';
 
 import { OrbitControls } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/controls/OrbitControls.js'
 
 
 let container, stats, guiStatsEl;
-    // let gui
 let camera, light, backlight, controls, scene, renderer, material;
 
 const loader = new THREE.TextureLoader();
@@ -45,12 +43,12 @@ const aerialgroup = new THREE.Group();
 const drawinggroup = new THREE.Group();
 const bubblegroup = new THREE.Group();
 
-var time = new THREE.Clock();
+// var time = new THREE.Clock();
 
-const objects=[];
-const annotations=[];
+// const objects=[];
+// const annotations=[];
 
-bubblegroup.add(objects);
+// bubblegroup.add(objects);
 
 
 
@@ -113,11 +111,11 @@ animate();
 
 
         const mapgeo = new THREE.PlaneGeometry(30,21);
-        const mapmaterial = new THREE.MeshBasicMaterial({map: loader.load("map.png"), transparent:true});
+//         const mapmaterial = new THREE.MeshBasicMaterial({map: loader.load("map.png"), transparent:true});
         const map2material = new THREE.MeshBasicMaterial({map: loader.load("basemap.png"), transparent:true})
         const cloudmaterial = new THREE.MeshBasicMaterial({map: loader.load("cloud-01.png"), transparent:true});
         const boatmaterial = new THREE.MeshBasicMaterial({map: loader.load("cloud-02.png"), transparent:true});
-	mapmaterial.alphaTest = 0.5;
+// 	mapmaterial.alphaTest = 0.5;
         map2material.alphaTest = 0.5;
 	cloudmaterial.alphaTest = 0.5;
 			
@@ -137,86 +135,6 @@ animate();
   boat.position.z = -2;
 	boat.position.x = -4;
   boat.position.y = 6;
-	
-        
-        aerialgroup.add(map);
-//         drawinggroup.add(map2, cloud, boat);
-			
-// 	const beematerial = new THREE.MeshBasicMaterial({map: loader.load("bee.png"), transparent:true});
-// 	beematerial..alphaTest = 0.5;
-// 	const beegeo = new THREE.PlaneGeometry(4,4);
-// 	const bee = new THREE.Mesh(beegeo, beematerial);
-			
-// 	function animatebee(){
-// 	bee.rotation.y = 
-// 	}
-const annotationlist=["bee.png", "water.png"]
-for (let i=0; i<annotationlist.length; i++){
-    let annotationmaterial, annotationgeo, annotationsprite;
-
-    let bubble, bubblegeo, bubblecolor;
-    let agroup;
-
-    agroup = new THREE.Group();
-
-    annotationmaterial = new THREE.MeshBasicMaterial({map:loader.load(annotationlist[i]), transparent:true});
-    annotationgeo = new THREE.PlaneGeometry(2,2)
-
-    const color = new THREE.Color();
-	color.setHSL( Math.random(), 0.7, Math.random() * 0.2 + 0.05, 0.1 );
-
-    bubblegeo = new THREE.SphereGeometry( 0.3, 15 );
-    
-	bubblecolor = new THREE.MeshBasicMaterial( { map: loader.load(annotationlist[i]), transparent:true } );
-
-	bubble = new THREE.Mesh( bubblegeo, bubblecolor );
-    bubble.position.set( 5*Math.random(),3* Math.random(), Math.random())
-
-    annotationsprite = new THREE.Mesh(annotationgeo, annotationmaterial);
-   
-    bubbleanimate();
-
-    function bubbleanimate() {
-        const elapsedTime = time.getElapsedTime();
-        const elapsedTimeInMs = Math.round(elapsedTime * 1000);
-
-        const radius = 3;
-        const speed = 0.05;
-        const heightAngle = (i+1)*elapsedTime * speed + i;
-        const thetaAngle = (i+1)* elapsedTime * -speed + i;
-
-        bubble.position.x = radius * Math.cos(thetaAngle) + i;
-        bubble.position.y = radius * Math.sin(thetaAngle) + i;
-        bubble.position.z = radius * Math.cos(heightAngle);
-
-        // bubble.position.x += 0.001 * Math.random();
-        // bubble.position.y += 0.001 * Math.random();
-        // bubble.position.z += 0.001 * Math.random();
-        
-        annotationsprite.position.copy(bubble.position)
-        annotationsprite.position.z = annotationsprite.position.z+0.5;
-        annotationsprite.position.y = annotationsprite.position.y+0.5;
-        annotationsprite.position.x = annotationsprite.position.x+0.5;            
-        requestAnimationFrame( bubbleanimate );
-            controls.update();
-            render();
-            }
-
-    // agroup.add(bubble);
-    // bubble.add(annotationsprite);
-
-    // bubble.add(annotationsprite)
-    // annotationsprite.visible=false;
-    // annotationsprite.scale.set( awidth, aheight, 1 );
-    objects.push(bubble)
-    annotations.push(annotationsprite)
-    // bubble.add(annotationsprite)
-
-    bubblegroup.add(bubble);
-
-
-}
-
 
 			
 var particles = 40777;
@@ -237,31 +155,10 @@ var particles = 40777;
         const water = new THREE.Points( geometry, materialpoints );
     
         drawinggroup.add(water);
+scene.add(drawinggroup)
 
 
-    scene.add(bubblegroup);
-    var params = {
-				scene: "bubble"
-			};
-const gui = new GUI();
 
-gui.add(params,'scene',['aerial map', 'drawing', 'bubble']).onChange( function (value){
-  switch(value){
-    case 'aerial map': scene.add(aerialgroup);
-                        scene.remove(drawinggroup);
-                        scene.remove(bubblegroup);
-
-                        break;
-   case 'drawing': scene.remove(aerialgroup);
-                        scene.add(drawinggroup);   
-                        scene.remove(bubblegroup);
-                        break;    
-   case 'bubble': scene.remove(aerialgroup);
-                    scene.remove(drawinggroup);
-                        scene.add(bubblegroup);   
-                        break;           
-  }
-})
 
 
 function init() {
@@ -274,10 +171,8 @@ function init() {
 //   camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / -2, 1, 100 );
 camera = new THREE.PerspectiveCamera( 50, width / height, 1, 100 );
 
-  camera.position.z = 10;
-//   camera.position.y = 0;
+  camera.position.z = 30;
 
-//   camera.position.x = 0;
 
         //light
         light = new THREE.AmbientLight( 0xffffff, 1 );

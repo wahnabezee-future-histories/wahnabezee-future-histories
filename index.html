@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>bi</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" rel="stylesheet" href="bi.css">
+	</head>
+	<body>
+
+		<div id="info">
+			<h1>belleisle</h1>
+		</div>
+    <div id="container">
+
+    </div>
+		<!-- <div class="sidebar">
+			<h2></h2>
+			<h2></h2>
+			<h2></h2>
+			<h2></h2>
+		</div> -->
+
+
+    
+
+
+		<script type="module">
+
+import * as THREE from 'https://unpkg.com/three@0.142.0/build/three.module.js';
+
+import Stats from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/libs/stats.module.js';
+import { GUI } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/libs/dat.gui.module.js';
+
+import { OrbitControls } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/controls/OrbitControls.js'
+
+
+let container, stats, guiStatsEl;
+    // let gui
+let camera, light, backlight, controls, scene, renderer, material;
+
+const loader = new THREE.TextureLoader();
+
+const aerialgroup = new THREE.Group();
+const drawinggroup = new THREE.Group();
+const bubblegroup = new THREE.Group();
+
+var time = new THREE.Clock();
+
+const objects=[];
+const annotations=[];
+
+bubblegroup.add(objects);
+
+
+
+// gui
+
+const Method = {
+  INSTANCED: 'INSTANCED',
+  MERGED: 'MERGED',
+  NAIVE: 'NAIVE'
+};
+
+const api = {
+  method: Method.INSTANCED,
+  count: 1000
+};
+
+//raycaster/////////////////////////////////////////////////////////////////////////////////
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
+function onPointerDown( event ) {
+
+// calculate pointer position in normalized device coordinates
+// (-1 to +1) for both components
+
+
+    pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
+
+				raycaster.setFromCamera( pointer, camera );
+				const intersects = raycaster.intersectObjects( objects, false );
+                if ( intersects.length > 0 ) {
+                    const intersect = intersects[ 0 ];
+                    for (let a = 0; a<objects.length; a++){
+                        if (objects[a]===intersect.object) {
+                            bubblegroup.add(annotations[a])
+                        } 
+                        else{
+                            bubblegroup.remove(annotations[a])
+                        }
+                    }
+    }
+
+
+};
+window.addEventListener( 'pointerdown', onPointerDown );
+			
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+init();
+    // initmediaobj();
+// initMesh();
+animate();
+
+
+
+        const mapgeo = new THREE.PlaneGeometry(30,21);
+        const mapmaterial = new THREE.MeshBasicMaterial({map: loader.load("map.png"), transparent:true});
+        const map2material = new THREE.MeshBasicMaterial({map: loader.load("basemap.png"), transparent:true})
+        const cloudmaterial = new THREE.MeshBasicMaterial({map: loader.load("cloud-01.png"), transparent:true});
+        const boatmaterial = new THREE.MeshBasicMaterial({map: loader.load("cloud-02.png"), transparent:true});
+	mapmaterial.alphaTest = 0.5;
+        map2material.alphaTest = 0.5;
+	cloudmaterial.alphaTest = 0.5;
+			
+	const cloudgeo = new THREE.PlaneGeometry(15,7);
+	const cloud = new THREE.Mesh(cloudgeo, cloudmaterial)
+  const boat = new THREE.Mesh(cloudgeo, boatmaterial)
+
+	
+        const map = new THREE.Mesh(mapgeo,mapmaterial);
+        // map.rotation.y= 0.5*Math.PI;
+        const map2 = new THREE.Mesh(mapgeo,map2material);
+        // map.position.=0;
+        // map2.position.z=1;
+			
+	cloud.position.z = 5;
+	cloud.position.x = -2;
+  boat.position.z = -2;
+	boat.position.x = -4;
+  boat.position.y = 6;
+	
+        
+        aerialgroup.add(map);
+//         drawinggroup.add(map2, cloud, boat);
+			
+// 	const beematerial = new THREE.MeshBasicMaterial({map: loader.load("bee.png"), transparent:true});
+// 	beematerial..alphaTest = 0.5;
+// 	const beegeo = new THREE.PlaneGeometry(4,4);
+// 	const bee = new THREE.Mesh(beegeo, beematerial);
+			
+// 	function animatebee(){
+// 	bee.rotation.y = 
+// 	}
+const annotationlist=["bee.png", "water.png"]
+for (let i=0; i<annotationlist.length; i++){
+    let annotationmaterial, annotationgeo, annotationsprite;
+
+    let bubble, bubblegeo, bubblecolor;
+    let agroup;
+
+    agroup = new THREE.Group();
+
+    annotationmaterial = new THREE.MeshBasicMaterial({map:loader.load(annotationlist[i]), transparent:true});
+    annotationgeo = new THREE.PlaneGeometry(2,2)
+
+    const color = new THREE.Color();
+	color.setHSL( Math.random(), 0.7, Math.random() * 0.2 + 0.05, 0.1 );
+
+    bubblegeo = new THREE.SphereGeometry( 0.3, 15 );
+    
+	bubblecolor = new THREE.MeshBasicMaterial( { map: loader.load(annotationlist[i]), transparent:true } );
+
+	bubble = new THREE.Mesh( bubblegeo, bubblecolor );
+    bubble.position.set( 5*Math.random(),3* Math.random(), Math.random())
+
+    annotationsprite = new THREE.Mesh(annotationgeo, annotationmaterial);
+   
+    bubbleanimate();
+
+    function bubbleanimate() {
+        const elapsedTime = time.getElapsedTime();
+        const elapsedTimeInMs = Math.round(elapsedTime * 1000);
+
+        const radius = 3;
+        const speed = 0.05;
+        const heightAngle = (i+1)*elapsedTime * speed + i;
+        const thetaAngle = (i+1)* elapsedTime * -speed + i;
+
+        bubble.position.x = radius * Math.cos(thetaAngle) + i;
+        bubble.position.y = radius * Math.sin(thetaAngle) + i;
+        bubble.position.z = radius * Math.cos(heightAngle);
+
+        // bubble.position.x += 0.001 * Math.random();
+        // bubble.position.y += 0.001 * Math.random();
+        // bubble.position.z += 0.001 * Math.random();
+        
+        annotationsprite.position.copy(bubble.position)
+        annotationsprite.position.z = annotationsprite.position.z+0.5;
+        annotationsprite.position.y = annotationsprite.position.y+0.5;
+        annotationsprite.position.x = annotationsprite.position.x+0.5;            
+        requestAnimationFrame( bubbleanimate );
+            controls.update();
+            render();
+            }
+
+    // agroup.add(bubble);
+    // bubble.add(annotationsprite);
+
+    // bubble.add(annotationsprite)
+    // annotationsprite.visible=false;
+    // annotationsprite.scale.set( awidth, aheight, 1 );
+    objects.push(bubble)
+    annotations.push(annotationsprite)
+    // bubble.add(annotationsprite)
+
+    bubblegroup.add(bubble);
+
+
+}
+
+
+			
+var particles = 40777;
+        let positions = [];
+        var geometry = new THREE.BufferGeometry();
+        var n = 50, n2 = n / 2; 
+        var materialpoints = new THREE.PointsMaterial( { map: loader.load("water.png"), transparent:true,  size: 0.5, vertexColors: false } );
+
+        for ( var i = 0; i < particles; i ++ ) {
+            var x = Math.random() * n - n2;
+            var y = Math.random() * n - n2;
+            var z = -1;
+            positions.push( x, y, z );
+
+        }
+        geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+        geometry.computeBoundingSphere();
+        const water = new THREE.Points( geometry, materialpoints );
+    
+        drawinggroup.add(water);
+
+
+    scene.add(bubblegroup);
+    var params = {
+				scene: "bubble"
+			};
+const gui = new GUI();
+
+gui.add(params,'scene',['aerial map', 'drawing', 'bubble']).onChange( function (value){
+  switch(value){
+    case 'aerial map': scene.add(aerialgroup);
+                        scene.remove(drawinggroup);
+                        scene.remove(bubblegroup);
+
+                        break;
+   case 'drawing': scene.remove(aerialgroup);
+                        scene.add(drawinggroup);   
+                        scene.remove(bubblegroup);
+                        break;    
+   case 'bubble': scene.remove(aerialgroup);
+                    scene.remove(drawinggroup);
+                        scene.add(bubblegroup);   
+                        break;           
+  }
+})
+
+
+function init() {
+
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  // camera
+
+//   camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / -2, 1, 100 );
+camera = new THREE.PerspectiveCamera( 50, width / height, 1, 100 );
+
+  camera.position.z = 10;
+//   camera.position.y = 0;
+
+//   camera.position.x = 0;
+
+        //light
+        light = new THREE.AmbientLight( 0xffffff, 1 );
+  // backlight = new THREE.DirectionalLight( 0xffffff, 1 );
+
+        light.position.set( 0, 0, 10 ).normalize();
+        // backlight.position.set( 0, 0, -10 ).normalize();
+
+  // renderer
+
+  renderer = new THREE.WebGLRenderer( { antialias: true } );
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( width, height );
+  renderer.outputEncoding = THREE.sRGBEncoding;
+
+  container = document.getElementById( 'container' );
+  container.appendChild( renderer.domElement );
+
+  // scene
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color( 0x000000 );
+
+  // controls
+
+  controls = new OrbitControls( camera, renderer.domElement );
+	
+	controls.mouseButtons = {
+	RIGHT: THREE.MOUSE.ROTATE,
+	MIDDLE: THREE.MOUSE.DOLLY,
+	LEFT: THREE.MOUSE.PAN
+}
+  controls.enableRotate = false;
+  // controls.autoRotate = true;
+	controls.maxDistance = 30;
+
+  // stats
+
+//   stats = new Stats();
+//   container.appendChild( stats.dom );
+
+
+        scene.add(light)
+
+
+  window.addEventListener( 'resize', onWindowResize );
+
+  Object.assign( window, { scene } );
+
+}
+
+//
+
+function onWindowResize() {
+
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+
+  camera.aspect = width / height;
+  camera.updateProjectionMatrix();
+
+  renderer.setSize( width, height );
+
+}
+
+function animate() {
+  requestAnimationFrame( animate );
+
+  controls.update();
+//   stats.update();
+
+  render();
+
+}
+
+function render() {
+
+  renderer.render( scene, camera );
+
+}
+
+//
+
+function getGeometryByteLength( geometry ) {
+
+  let total = 0;
+
+  if ( geometry.index ) total += geometry.index.array.byteLength;
+
+  for ( const name in geometry.attributes ) {
+
+    total += geometry.attributes[ name ].array.byteLength;
+
+  }
+
+  return total;
+
+}
+
+// Source: https://stackoverflow.com/a/18650828/1314762
+function formatBytes( bytes, decimals ) {
+
+  if ( bytes === 0 ) return '0 bytes';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = [ 'bytes', 'KB', 'MB' ];
+
+  const i = Math.floor( Math.log( bytes ) / Math.log( k ) );
+
+  return parseFloat( ( bytes / Math.pow( k, i ) ).toFixed( dm ) ) + ' ' + sizes[ i ];
+
+}
+		</script>
+
+	</body>
+
+</html>

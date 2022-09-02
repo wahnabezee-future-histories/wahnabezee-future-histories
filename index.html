@@ -1,19 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<title>bi</title>
+<title>bi</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link type="text/css" rel="stylesheet" href="bi.css">
-	</head>
-	<body>
+		<style>
+      body {
+	margin: 0;
+	background-color: #000;
+	color: #fff;
+	font-family: Monospace;
+	font-size: 13px;
+	line-height: 24px;
+}
 
-		<div id="info">
-			<h1>belleisle</h1>
+a {
+	color: #ff0;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+button {
+	cursor: pointer;
+	text-transform: uppercase;
+}
+
+canvas {
+	display: block;
+}
+
+#info {
+	position: absolute;
+	top: 0px;
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	text-align: center;
+	z-index: -1; /* TODO Solve this in HTML */
+}
+#info2 {
+	position: absolute;
+	top: 75%;
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	text-align: center;
+	z-index: -1; /* TODO Solve this in HTML */
+}
+
+.dg.ac {
+	z-index: -2000 !important; /* TODO Solve this in HTML */
+ }
+
+#container {
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	padding: 0px;
+	box-sizing: border-box;
+	text-align: center;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	/* user-select: none; */
+	pointer-events: auto;
+	z-index: -99;} 
+    </style>
+	
+	
+    
+
+		<div id="info2">
 		</div>
     <div id="container">
 
-    </div>
+    <canvas data-engine="three.js r142" width="1520" height="976" tabindex="0" style="display: block; width: 1520px; height: 976px;"></canvas></div>
 		<!-- <div class="sidebar">
 			<h2></h2>
 			<h2></h2>
@@ -24,20 +85,21 @@
 
     
 
-
 		<script type="module">
 
 import * as THREE from 'https://unpkg.com/three@0.142.0/build/three.module.js';
 
-import Stats from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/libs/stats.module.js';
-import { GUI } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/libs/dat.gui.module.js';
+// import Stats from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/libs/stats.module.js';
+// import { GUI } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/libs/dat.gui.module.js';
 
 import { OrbitControls } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/controls/OrbitControls.js'
+// import { FontLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/loaders/FontLoader.js';
 
 
 let container, stats, guiStatsEl;
     // let gui
 let camera, light, backlight, controls, scene, renderer, material;
+
 
 const loader = new THREE.TextureLoader();
 
@@ -71,6 +133,9 @@ const api = {
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 
+// onPointerDown();
+// onPointerDown2();
+
 function onPointerDown( event ) {
 
 // calculate pointer position in normalized device coordinates
@@ -79,7 +144,8 @@ function onPointerDown( event ) {
 
     pointer.set( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1 );
 
-				raycaster.setFromCamera( pointer, camera );
+	raycaster.setFromCamera( pointer, camera );
+
 				const intersects = raycaster.intersectObjects( objects, false );
                 if ( intersects.length > 0 ) {
                     const intersect = intersects[ 0 ];
@@ -89,16 +155,15 @@ function onPointerDown( event ) {
                         } 
                         else{
                             bubblegroup.remove(annotations[a])
+                            
                         }
                     }
     }
 
 
+
 };
-window.addEventListener( 'pointerdown', onPointerDown );
-			
-
-
+// window.addEventListener( 'pointerdown', onPointerDown );
 
 
 
@@ -113,17 +178,23 @@ animate();
 
 
         const mapgeo = new THREE.PlaneGeometry(30,21);
-        const mapmaterial = new THREE.MeshBasicMaterial({map: loader.load("map.png"), transparent:true});
-        const map2material = new THREE.MeshBasicMaterial({map: loader.load("basemap.png"), transparent:true})
-        const cloudmaterial = new THREE.MeshBasicMaterial({map: loader.load("cloud-01.png"), transparent:true});
-        const boatmaterial = new THREE.MeshBasicMaterial({map: loader.load("cloud-02.png"), transparent:true});
+        const mapmaterial = new THREE.MeshBasicMaterial({map: loader.load("https://freight.cargo.site/t/original/i/5720ccaffa38e6db647cf578ce8e8dd31140c0b080a22ee53a6ee5dfe2cccb88/map.png"), transparent:true});
+        const map2material = new THREE.MeshBasicMaterial({map: loader.load("https://freight.cargo.site/t/original/i/ce8cc3c26518116db6d7681ca457917e5a822fc72a1ba36cc4cf1f32a076b2d6/basemap.png"), transparent:true})
+        const cloudmaterial = new THREE.MeshBasicMaterial({map: loader.load("https://freight.cargo.site/t/original/i/35c6e184aa6c11389a1007f0d641a5876adfc4f67b0148b693a680fd00428d9e/cloud.png"), transparent:true});
+        const boatmaterial = new THREE.MeshBasicMaterial({map: loader.load("https://freight.cargo.site/t/original/i/475cd2f5fabd78a558f384eaa35f1259a99b40354496947c1e8f1a9ce43d331f/cloud-02.png"), transparent:true});
+        const eaglematerial = new THREE.MeshBasicMaterial({map: loader.load("https://freight.cargo.site/t/original/i/7c2d5113209e36a80ab8453843173047878332de2404030f35d7f6bc7428b097/cloud-03.png"), transparent:true});
+
 	mapmaterial.alphaTest = 0.5;
         map2material.alphaTest = 0.5;
 	cloudmaterial.alphaTest = 0.5;
 			
-	const cloudgeo = new THREE.PlaneGeometry(15,7);
-	const cloud = new THREE.Mesh(cloudgeo, cloudmaterial)
-  const boat = new THREE.Mesh(cloudgeo, boatmaterial)
+	const boatgeo = new THREE.PlaneGeometry(15,7);
+  const cloudgeo = new THREE.PlaneGeometry(4.8,3.3);
+  const eaglegeo = new THREE.PlaneGeometry(3.2,4);
+  
+	const cloud = new THREE.Mesh(cloudgeo, cloudmaterial);
+  const boat = new THREE.Mesh(boatgeo, boatmaterial);
+  const eagle = new THREE.Mesh(eaglegeo, eaglematerial);
 
 	
         const map = new THREE.Mesh(mapgeo,mapmaterial);
@@ -133,74 +204,134 @@ animate();
         // map2.position.z=1;
 			
 	cloud.position.z = 5;
-	cloud.position.x = -2;
+	cloud.position.x = -6.3;
+  cloud.position.y = 0;
   boat.position.z = -2;
 	boat.position.x = -4;
   boat.position.y = 6;
+
+  eagle.position.z = 5;
+	eagle.position.x = 2;
+  eagle.position.y = 0;
 	
         
-        aerialgroup.add(map);
-//         drawinggroup.add(map2, cloud, boat);
+        //aerialgroup.add(map);
+        drawinggroup.add(map2, cloud, boat,eagle);
 			
-// 	const beematerial = new THREE.MeshBasicMaterial({map: loader.load("bee.png"), transparent:true});
-// 	beematerial..alphaTest = 0.5;
-// 	const beegeo = new THREE.PlaneGeometry(4,4);
-// 	const bee = new THREE.Mesh(beegeo, beematerial);
-			
-// 	function animatebee(){
-// 	bee.rotation.y = 
-// 	}
-const annotationlist=["bee.png", "water.png"]
-for (let i=0; i<annotationlist.length; i++){
+const annotationlist=["https://freight.cargo.site/t/original/i/385badf01fe17ee36a424cce8802208d4ceec16155e3f7683ae64211ee5e1ec2/1.png", 
+                      "https://freight.cargo.site/t/original/i/ef3642a04c1334e085f2e3c3dfe24935ae21dabb5936df88141de0df55933c10/2.png",
+                    "https://freight.cargo.site/t/original/i/6e2d9d3a8eea80f672317a9a6702e18b4a94bc27fc1273cf2be0206eab259edb/3.png",
+                  "https://freight.cargo.site/t/original/i/40c59ccf53c42ab214c1341446f8e5ae3251f08292379d82680b0404b2a15537/4.png"]
+const widthratiomap=0.051918;
+const heightratiomap=0.01872;
+const unitmap=500;
+
+const whitebasegeo = new THREE.PlaneGeometry(100,100);
+const whitematerial = new THREE.MeshBasicMaterial({color:0xffffff});
+const whitebase = new THREE.Mesh(whitebasegeo,whitematerial);
+whitebase.position.z=-10;
+bubblegroup.add(whitebase);
+
+
+const xbuildinggeocoorlist=[ -0.393778651	,
+                            -0.351648754	,
+                            -0.357845063	,
+                            -0.313617628	,
+                            -0.282907662	,
+                            -0.255633884	,
+                            -0.219006895	,
+                            -0.147228322	,
+                            -0.119199507	,
+                            -0.126356947	,
+                            -0.119902539	,
+                            -0.105142725	,
+                            -0.107351978	,
+                            -0.120852113	,
+                            -0.127685966	,
+                            -0.103118379	,
+                            -0.087252976	,
+                            0.002043607	,
+                            0.014359182	,
+                            0.101727724	,
+                            0.034691244	,
+                            0.294368042	,
+                            0.351696907	,
+                            0.282289379	,];
+const ybuildinggeocoorlist= [
+                            -0.253440171	,
+                            -0.145144231	,
+                            -0.190475427	,
+                            -0.418819444	,
+                            -0.133285256	,
+                            -0.423397436	,
+                            -0.395470085	,
+                            -0.108269231	,
+                            -0.160186966	,
+                            -0.416490385	,
+                            -0.19661859	,
+                            -0.241736111	,
+                            -0.276244658	,
+                            -0.312884615	,
+                            -0.328942308	,
+                            -0.314738248	,
+                            -0.210699786	,
+                            0.084439103	,
+                            -0.158103632	,
+                            0.345491453	,
+                            0.083803419	,
+                            0.235149573	,
+                            -0.124358974	,
+                            0.421971154	,
+                            ]
+const name =["	Buildings1	",
+              "	Detroit Police Harbor Master	",
+              "	Buildings2	",
+              "	Belle Isle Casino	",
+              "	Belle Isle Boat House	",
+              "	Flynn Pavilion	",
+              "	Remick Music Shell	",
+              "	Buildings3	",
+              "	Kids Row Ice Cream Cafe	",
+              "	Dossin Great Lakes Museum	",
+              "	Giant Slide	",
+              "	Buildings4	",
+              "	White House	",
+              "	Belle Isle Aquarium	",
+              "	conservatory	",
+              "	Green House	",
+              "	Belle Isle Sawmill	",
+              "	Belle Isle Beach House	",
+              "	Buildings6	",
+              "	Detroit Yacht Club	",
+              "	Buildings7	",
+              "	Belle Isle Nature Center	",
+              "	US Coast Guard Station Belle Isle	",
+              "	Buildings8	",
+                
+              ]
+for (let i=0; i<xbuildinggeocoorlist.length; i++){
     let annotationmaterial, annotationgeo, annotationsprite;
 
     let bubble, bubblegeo, bubblecolor;
     let agroup;
-
-    agroup = new THREE.Group();
-
-    annotationmaterial = new THREE.MeshBasicMaterial({map:loader.load(annotationlist[i]), transparent:true});
-    annotationgeo = new THREE.PlaneGeometry(2,2)
-
+ annotationmaterial = new THREE.MeshBasicMaterial({map: loader.load(annotationlist[i]), transparent:true});
+    annotationgeo = new THREE.PlaneGeometry( 2,2 );
+    annotationsprite = new THREE.Mesh( annotationgeo, annotationmaterial ) ;
+   
     const color = new THREE.Color();
 	color.setHSL( Math.random(), 0.7, Math.random() * 0.2 + 0.05, 0.1 );
 
-    bubblegeo = new THREE.SphereGeometry( 0.3, 15 );
+    bubblegeo = new THREE.PlaneGeometry( 0.4, 0.4  );
     
-	bubblecolor = new THREE.MeshBasicMaterial( { map: loader.load(annotationlist[i]), transparent:true } );
+	bubblecolor = new THREE.MeshBasicMaterial( { map: loader.load("https://freight.cargo.site/t/original/i/ff71fad49153d0756a57af569c041845386c4b34657545d20c3a277869cec8e4/noun-cross-2136719.png"), transparent: true} );
 
 	bubble = new THREE.Mesh( bubblegeo, bubblecolor );
-    bubble.position.set( 5*Math.random(),3* Math.random(), Math.random())
+    bubble.position.x=xbuildinggeocoorlist[i]*widthratiomap*unitmap;
+    bubble.position.y=ybuildinggeocoorlist[i]*heightratiomap*unitmap;
+ annotationsprite.position.copy(bubble.position);
+ annotationsprite.position.z = annotationsprite.position.z+0.5;
 
-    annotationsprite = new THREE.Mesh(annotationgeo, annotationmaterial);
-   
-    bubbleanimate();
 
-    function bubbleanimate() {
-        const elapsedTime = time.getElapsedTime();
-        const elapsedTimeInMs = Math.round(elapsedTime * 1000);
-
-        const radius = 3;
-        const speed = 0.05;
-        const heightAngle = (i+1)*elapsedTime * speed + i;
-        const thetaAngle = (i+1)* elapsedTime * -speed + i;
-
-        bubble.position.x = radius * Math.cos(thetaAngle) + i;
-        bubble.position.y = radius * Math.sin(thetaAngle) + i;
-        bubble.position.z = radius * Math.cos(heightAngle);
-
-        // bubble.position.x += 0.001 * Math.random();
-        // bubble.position.y += 0.001 * Math.random();
-        // bubble.position.z += 0.001 * Math.random();
-        
-        annotationsprite.position.copy(bubble.position)
-        annotationsprite.position.z = annotationsprite.position.z+0.5;
-        annotationsprite.position.y = annotationsprite.position.y+0.5;
-        annotationsprite.position.x = annotationsprite.position.x+0.5;            
-        requestAnimationFrame( bubbleanimate );
-            controls.update();
-            render();
-            }
 
     // agroup.add(bubble);
     // bubble.add(annotationsprite);
@@ -223,7 +354,7 @@ var particles = 40777;
         let positions = [];
         var geometry = new THREE.BufferGeometry();
         var n = 50, n2 = n / 2; 
-        var materialpoints = new THREE.PointsMaterial( { map: loader.load("water.png"), transparent:true,  size: 0.5, vertexColors: false } );
+        var materialpoints = new THREE.PointsMaterial( { map: loader.load("https://freight.cargo.site/t/original/i/be15e9509d32521c7d5d2b2d159806a79bcb63df6cd6838d784111397a065b06/water.png"), transparent:true,  size: 0.5, vertexColors: false } );
 
         for ( var i = 0; i < particles; i ++ ) {
             var x = Math.random() * n - n2;
@@ -239,29 +370,30 @@ var particles = 40777;
         drawinggroup.add(water);
 
 
-    scene.add(bubblegroup);
+    scene.add(drawinggroup);
     var params = {
 				scene: "bubble"
 			};
-const gui = new GUI();
+// const gui = new GUI();
 
-gui.add(params,'scene',['aerial map', 'drawing', 'bubble']).onChange( function (value){
-  switch(value){
-    case 'aerial map': scene.add(aerialgroup);
-                        scene.remove(drawinggroup);
-                        scene.remove(bubblegroup);
+// gui.add(params,'scene',['aerial map', 'drawing', 'bubble']).onChange( function (value){
+//   switch(value){
+//     case 'aerial map': scene.add(aerialgroup);
+//                         scene.remove(drawinggroup);
+//                         scene.remove(bubblegroup);
 
-                        break;
-   case 'drawing': scene.remove(aerialgroup);
-                        scene.add(drawinggroup);   
-                        scene.remove(bubblegroup);
-                        break;    
-   case 'bubble': scene.remove(aerialgroup);
-                    scene.remove(drawinggroup);
-                        scene.add(bubblegroup);   
-                        break;           
-  }
-})
+//                         break;
+//     case 'drawing': 
+//                          scene.remove(aerialgroup);
+//                         scene.add(drawinggroup);   
+//                         scene.remove(bubblegroup);
+//                         break;    
+//    case 'bubble': scene.remove(aerialgroup);
+//                     scene.remove(drawinggroup);
+//                         scene.add(bubblegroup);   
+//                         break;           
+//   }
+// })
 
 
 function init() {
@@ -274,7 +406,7 @@ function init() {
 //   camera = new THREE.OrthographicCamera( width / - 2, width / 2, height / 2, height / -2, 1, 100 );
 camera = new THREE.PerspectiveCamera( 50, width / height, 1, 100 );
 
-  camera.position.z = 10;
+  camera.position.z = 20;
 //   camera.position.y = 0;
 
 //   camera.position.x = 0;
@@ -392,7 +524,3 @@ function formatBytes( bytes, decimals ) {
 
 }
 		</script>
-
-	</body>
-
-</html>

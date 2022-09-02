@@ -36,6 +36,7 @@ canvas {
 	box-sizing: border-box;
 	text-align: left;
 	font-size:90px;
+	font-weight:600;
 	z-index: 1; /* TODO Solve this in HTML */
 	pointer-events:auto;
 
@@ -44,10 +45,11 @@ canvas {
 	position:fixed;
 	font-family: "Roboto";
 	color: rgb(255,10,141);
-	bottom: 30px;
+	bottom: 35px;
 	right:30px;
 	font-size:100px;
 	text-align:right;
+	font-weight:600;
 	pointer-events:auto;
 }
 

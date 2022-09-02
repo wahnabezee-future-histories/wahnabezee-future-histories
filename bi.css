@@ -2,7 +2,7 @@ body {
 	margin: 0;
 	background-color: #000;
 	color: #fff;
-	font-family: Monospace;
+	font- family: "Roboto";
 	font-size: 13px;
 	line-height: 24px;
 }
@@ -42,7 +42,8 @@ canvas {
 #plussign{
 	position:fixed;
 	color: 0xff0a8d;
-	bottom: 150px;
+	bottom: 30px;
+	right:30px;
 	font-size:100px;
 	text-align:right;
 	pointer-events:auto;

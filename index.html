@@ -149,7 +149,7 @@ animate();
 var particles = 40777;
         let positions = [];
         var geometry = new THREE.BufferGeometry();
-        var n = 50, n2 = n / 2; 
+        var n = 60, n2 = n / 2; 
         var materialpoints = new THREE.PointsMaterial( { map: loader.load("water.png"), transparent:true,  size: 0.5, vertexColors: false } );
 
         for ( var i = 0; i < particles; i ++ ) {
@@ -216,7 +216,7 @@ camera = new THREE.PerspectiveCamera( 50, width / height, 1, 100 );
 }
   controls.enableRotate = false;
   // controls.autoRotate = true;
-	controls.maxDistance = 30;
+	controls.maxDistance = 60;
 
   // stats
 

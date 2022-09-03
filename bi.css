@@ -29,7 +29,7 @@ canvas {
 
 #info {
 	position: absolute;
-	display:block;
+	display:inline;
 	font-family: "Roboto";
 	top: 50px;
 	width: 100%;

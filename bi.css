@@ -36,7 +36,7 @@ canvas {
 	padding: 10px;
 	box-sizing: border-box;
 	text-align: left;
-	font-size:10vh;
+	font-size:9vh;
 	font-weight:600;
 	z-index: 1; /* TODO Solve this in HTML */
 	pointer-events:auto;
